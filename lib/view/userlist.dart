@@ -1,70 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:screlmachinetest/view/userexplain.dart';
-import 'package:screlmachinetest/viewmodel/provider.dart';
-import '../model/model.dart';
+import '../viewmodel/provider.dart';
 
-class UserList extends StatelessWidget {
-  final List<Welcome> users;
-
-  UserList(this.users);
-
+class UserListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final Users = Provider.of<PostProvider>(context);
+    final users = Provider.of<PostProvider>(context).data;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('User List'),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {
-              // Show the search bar or perform search action
-            },
-          ),
-        ],
-        bottom: PreferredSize(
-          preferredSize:
-              Size.fromHeight(48.0), // Define the height of the search bar
-          child: Padding(
-            padding: EdgeInsets.all(8.0),
-            child: TextField(
-              decoration: InputDecoration(
-                labelText: 'Search',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.search),
-              ),
-              onChanged: (query) {
-                // Handle search query changes
-                // You can filter the user list based on the search query here
-              },
-            ),
-          ),
-        ),
+        title: Text('Users name List'),
+        backgroundColor: Colors.black,
       ),
-      body: ListView.builder(
-        itemCount: users.length * 2 - 1,
+      body: ListView.separated(
+        itemCount: users.length,
+        separatorBuilder: (context, index) =>
+            Divider(thickness: 2), // Add dividers here
         itemBuilder: (context, index) {
-          if (index.isOdd) {
-            final itemIndex = index ~/ 2;
-            return Divider();
-          } else {
-            final itemIndex = index ~/ 2;
-            final user = users[itemIndex];
-            return ListTile(
-              title: Text(user.name),
-              subtitle: Text(user.email),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => UserDetails(user),
-                  ),
-                );
-              },
-            );
-          }
+          final user = users[index];
+          return ListTile(
+            title: Text(user.name),
+            subtitle: Text(user.email),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => UserDetailsPage(user),
+                ),
+              );
+            },
+          );
         },
       ),
     );
